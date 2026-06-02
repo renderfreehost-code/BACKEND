@@ -26,6 +26,12 @@ export function createSeedData() {
       heroSubtitle: "Browse polished product sections, preview demos, choose variants, check converted prices, and submit orders with a clean account history.",
       introAnimation: true,
       backgroundImage: "/assets/marketplace-bg.png",
+      heroSlides: [
+        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Premium panels", subtitle: "Smooth demo and purchase flow" },
+        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Fast support", subtitle: "Admin controlled products and variants" },
+        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Clear checkout", subtitle: "Manual payment verification with history" }
+      ],
+      heroIntervalSeconds: 6,
       supportWhatsApp: "https://wa.me/8801700000000",
       supportTelegram: "https://t.me/your_support",
       googleClientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -126,9 +132,9 @@ export function createSeedData() {
         enabled: true,
         features: ["Fast delivery", "Manual approval", "Video demo", "Balance history"],
         variants: [
-          { id: crypto.randomUUID(), name: "Basic", priceUsd: 5, description: "Starter setup" },
-          { id: crypto.randomUUID(), name: "Premium", priceUsd: 12, description: "Extra features" },
-          { id: crypto.randomUUID(), name: "VIP", priceUsd: 25, description: "Priority support" }
+          { id: crypto.randomUUID(), name: "1 Day Basic", priceUsd: 5, durationDays: 1, description: "Starter setup", stockKeys: [] },
+          { id: crypto.randomUUID(), name: "7 Days Premium", priceUsd: 12, durationDays: 7, description: "Extra features", stockKeys: [] },
+          { id: crypto.randomUUID(), name: "30 Days VIP", priceUsd: 25, durationDays: 30, description: "Priority support", stockKeys: [] }
         ]
       },
       {
@@ -143,8 +149,8 @@ export function createSeedData() {
         enabled: true,
         features: ["Quantity control", "Admin variants", "Payment proof", "User history"],
         variants: [
-          { id: crypto.randomUUID(), name: "1 Day", priceUsd: 3, description: "Short access" },
-          { id: crypto.randomUUID(), name: "7 Days", priceUsd: 15, description: "Weekly access" }
+          { id: crypto.randomUUID(), name: "1 Day", priceUsd: 3, durationDays: 1, description: "Short access", stockKeys: [] },
+          { id: crypto.randomUUID(), name: "7 Days", priceUsd: 15, durationDays: 7, description: "Weekly access", stockKeys: [] }
         ]
       },
       {
@@ -159,8 +165,8 @@ export function createSeedData() {
         enabled: true,
         features: ["Root mode", "Admin editable", "Demo optional", "Clear graphics"],
         variants: [
-          { id: crypto.randomUUID(), name: "Standard", priceUsd: 9, description: "Root panel standard" },
-          { id: crypto.randomUUID(), name: "Lifetime", priceUsd: 39, description: "Long access" }
+          { id: crypto.randomUUID(), name: "Standard", priceUsd: 9, durationDays: 7, description: "Root panel standard", stockKeys: [] },
+          { id: crypto.randomUUID(), name: "Lifetime", priceUsd: 39, durationDays: 0, description: "Long access", stockKeys: [] }
         ]
       },
       {
@@ -175,8 +181,8 @@ export function createSeedData() {
         enabled: true,
         features: ["PC tools", "USD base price", "BDT/INR conversion", "Help button"],
         variants: [
-          { id: crypto.randomUUID(), name: "Lite", priceUsd: 8, description: "Lite PC setup" },
-          { id: crypto.randomUUID(), name: "Full", priceUsd: 30, description: "Full PC package" }
+          { id: crypto.randomUUID(), name: "Lite", priceUsd: 8, durationDays: 7, description: "Lite PC setup", stockKeys: [] },
+          { id: crypto.randomUUID(), name: "Full", priceUsd: 30, durationDays: 30, description: "Full PC package", stockKeys: [] }
         ]
       }
     ],

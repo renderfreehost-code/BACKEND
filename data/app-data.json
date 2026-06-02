@@ -36,6 +36,27 @@
         "name": "PC Panel",
         "image": "/assets/marketplace-bg.png"
       }
+    ],
+    "heroIntervalSeconds": 6,
+    "heroSlides": [
+      {
+        "id": "ed64a4ee-167f-4ad1-8e5d-75a2ef3a5e30",
+        "image": "/assets/marketplace-bg.png",
+        "title": "Professional panel marketplace with smooth purchase flow",
+        "subtitle": "Browse polished product sections, preview demos, choose variants, check converted prices, and submit orders with a clean account history."
+      },
+      {
+        "id": "408ad75a-e5ac-4d3e-ac23-f633fb3e7d6d",
+        "image": "/assets/marketplace-bg.png",
+        "title": "Fast support",
+        "subtitle": "Admin controlled products, variants, and stock"
+      },
+      {
+        "id": "9940a4e2-7de3-4f85-8826-9e89ed712677",
+        "image": "/assets/marketplace-bg.png",
+        "title": "Clear checkout",
+        "subtitle": "Manual payment verification with clean history"
+      }
     ]
   },
   "paymentMethods": [
@@ -133,19 +154,25 @@
           "id": "a6ecac11-bdc6-4461-b34a-b6ce33254254",
           "name": "Basic",
           "priceUsd": 5,
-          "description": "Starter setup"
+          "description": "Starter setup",
+          "durationDays": 1,
+          "stockKeys": []
         },
         {
           "id": "aceb7937-85f2-4e93-b5d6-0fff5f350427",
           "name": "Premium",
           "priceUsd": 12,
-          "description": "Extra features"
+          "description": "Extra features",
+          "durationDays": 7,
+          "stockKeys": []
         },
         {
           "id": "adb6ce42-7831-4ac1-a6ea-7cc66252960c",
           "name": "VIP",
           "priceUsd": 25,
-          "description": "Priority support"
+          "description": "Priority support",
+          "durationDays": 30,
+          "stockKeys": []
         }
       ]
     },
@@ -170,13 +197,17 @@
           "id": "f3c837ca-f07a-4ea8-9c65-7b74ecf7c5e7",
           "name": "1 Day",
           "priceUsd": 3,
-          "description": "Short access"
+          "description": "Short access",
+          "durationDays": 1,
+          "stockKeys": []
         },
         {
           "id": "48a55893-8cea-4fe9-9bd1-6e17653be936",
           "name": "7 Days",
           "priceUsd": 15,
-          "description": "Weekly access"
+          "description": "Weekly access",
+          "durationDays": 7,
+          "stockKeys": []
         }
       ]
     },
@@ -201,13 +232,17 @@
           "id": "79974111-a658-438d-bffc-f25cc7ef01d2",
           "name": "Standard",
           "priceUsd": 9,
-          "description": "Root panel standard"
+          "description": "Root panel standard",
+          "durationDays": 7,
+          "stockKeys": []
         },
         {
           "id": "390a4862-8a1e-4efb-910d-7dda9f6fda07",
           "name": "Lifetime",
           "priceUsd": 39,
-          "description": "Long access"
+          "description": "Long access",
+          "durationDays": 0,
+          "stockKeys": []
         }
       ]
     },
@@ -232,13 +267,17 @@
           "id": "2c98c586-d290-45b9-8205-aa16b9c8f462",
           "name": "Lite",
           "priceUsd": 8,
-          "description": "Lite PC setup"
+          "description": "Lite PC setup",
+          "durationDays": 1,
+          "stockKeys": []
         },
         {
           "id": "0781b9bb-347b-4ddf-a268-13afceafb3f3",
           "name": "Full",
           "priceUsd": 30,
-          "description": "Full PC package"
+          "description": "Full PC package",
+          "durationDays": 30,
+          "stockKeys": []
         }
       ]
     }
@@ -259,5 +298,5 @@
   ],
   "orders": [],
   "createdAt": "2026-06-02T07:34:03.502Z",
-  "updatedAt": "2026-06-02T08:17:15.684Z"
+  "updatedAt": "2026-06-02T15:22:59.599Z"
 }

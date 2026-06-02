@@ -84,9 +84,19 @@ function withoutSecretUser(user) {
   return safe;
 }
 
+function publicProduct(product) {
+  return {
+    ...product,
+    variants: (product.variants || []).map(({ stockKeys, ...variant }) => ({
+      ...variant,
+      stockCount: Array.isArray(stockKeys) ? stockKeys.length : 0
+    }))
+  };
+}
+
 function publicData(data) {
   const sections = data.sections.filter((section) => section.enabled).sort((a, b) => a.sortOrder - b.sortOrder);
-  const products = data.products.filter((product) => product.enabled);
+  const products = data.products.filter((product) => product.enabled).map(publicProduct);
   return {
     updatedAt: data.updatedAt,
     settings: {
@@ -189,6 +199,7 @@ function makeSlug(input) {
 }
 
 function normalizeProduct(product, existing = {}) {
+  const existingVariants = Array.isArray(existing.variants) ? existing.variants : [];
   return {
     id: existing.id || product.id || crypto.randomUUID(),
     sectionId: product.sectionId || existing.sectionId,
@@ -201,12 +212,20 @@ function normalizeProduct(product, existing = {}) {
     enabled: product.enabled ?? existing.enabled ?? true,
     features: Array.isArray(product.features) ? product.features.filter(Boolean) : existing.features || [],
     variants: Array.isArray(product.variants)
-      ? product.variants.map((variant) => ({
-          id: variant.id || crypto.randomUUID(),
-          name: String(variant.name || "Variant").trim(),
-          priceUsd: roundMoney(variant.priceUsd),
-          description: String(variant.description || "").trim()
-        }))
+      ? product.variants.map((variant) => {
+          const matched = existingVariants.find((item) => item.id === variant.id)
+            || existingVariants.find((item) => item.name?.toLowerCase() === String(variant.name || "").trim().toLowerCase());
+          return {
+            id: matched?.id || variant.id || crypto.randomUUID(),
+            name: String(variant.name || "Variant").trim(),
+            priceUsd: roundMoney(variant.priceUsd),
+            durationDays: Number(variant.durationDays !== undefined ? variant.durationDays : matched?.durationDays || 0),
+            description: String(variant.description || "").trim(),
+            stockKeys: Array.isArray(variant.stockKeys)
+              ? variant.stockKeys.map((key) => String(key).trim()).filter(Boolean)
+              : matched?.stockKeys || []
+          };
+        })
       : existing.variants || []
   };
 }
@@ -232,6 +251,15 @@ function normalizeSettings(settings, existing) {
     heroSubtitle: String(settings.heroSubtitle ?? existing.heroSubtitle ?? "").trim(),
     introAnimation: Boolean(settings.introAnimation),
     backgroundImage: String(settings.backgroundImage ?? existing.backgroundImage ?? "").trim(),
+    heroIntervalSeconds: Math.max(3, Math.min(30, Number(settings.heroIntervalSeconds || existing.heroIntervalSeconds || 6))),
+    heroSlides: Array.isArray(settings.heroSlides)
+      ? settings.heroSlides.map((slide) => ({
+          id: slide.id || crypto.randomUUID(),
+          image: String(slide.image || "").trim(),
+          title: String(slide.title || "").trim(),
+          subtitle: String(slide.subtitle || "").trim()
+        })).filter((slide) => slide.image)
+      : existing.heroSlides || [],
     supportWhatsApp: String(settings.supportWhatsApp ?? existing.supportWhatsApp ?? "").trim(),
     supportTelegram: String(settings.supportTelegram ?? existing.supportTelegram ?? "").trim(),
     googleClientId: String(settings.googleClientId ?? existing.googleClientId ?? "").trim(),
@@ -551,6 +579,11 @@ async function handleApi(req, res, store, pathname) {
       saved.adminNote = String(body.adminNote ?? saved.adminNote ?? "").trim();
       saved.reviewedAt = new Date().toISOString();
       if (saved.status === "approved" && !saved.approvedBalanceApplied) {
+        const product = data.products.find((item) => item.id === saved.productId);
+        const variant = product?.variants?.find((item) => item.id === saved.variantId);
+        if (variant && !saved.deliveredKeys?.length && Array.isArray(variant.stockKeys) && variant.stockKeys.length) {
+          saved.deliveredKeys = variant.stockKeys.splice(0, saved.quantity);
+        }
         const user = data.users.find((item) => item.id === saved.userId);
         if (user) {
           user.history = user.history || [];
@@ -568,6 +601,70 @@ async function handleApi(req, res, store, pathname) {
     }).catch((error) => ({ error: error.message }));
     if (order.error) return sendError(res, 404, order.error);
     return sendJson(res, 200, { order });
+  }
+
+  if (orderUpdate && method === "DELETE") {
+    const admin = await requireAdmin(req, res, store);
+    if (!admin) return;
+    await store.update((data) => {
+      data.orders = data.orders.filter((item) => item.id !== orderUpdate.id);
+    });
+    return sendJson(res, 200, { ok: true });
+  }
+
+  if (method === "POST" && pathname === "/api/admin/orders/delete-bulk") {
+    const admin = await requireAdmin(req, res, store);
+    if (!admin) return;
+    const body = await readBody(req);
+    const ids = new Set(Array.isArray(body.ids) ? body.ids : []);
+    const deleted = await store.update((data) => {
+      const before = data.orders.length;
+      data.orders = data.orders.filter((item) => !ids.has(item.id));
+      return before - data.orders.length;
+    });
+    return sendJson(res, 200, { ok: true, deleted });
+  }
+
+  if (method === "POST" && pathname === "/api/admin/stock") {
+    const admin = await requireAdmin(req, res, store);
+    if (!admin) return;
+    const body = await readBody(req);
+    const result = await store.update((data) => {
+      const product = data.products.find((item) => item.id === body.productId);
+      if (!product) throw new Error("Product not found");
+      const variant = product.variants.find((item) => item.id === body.variantId);
+      if (!variant) throw new Error("Variant not found");
+      const keys = Array.isArray(body.keys)
+        ? body.keys.map((key) => String(key).trim()).filter(Boolean)
+        : String(body.keys || "").split(/\r?\n/).map((key) => key.trim()).filter(Boolean);
+      variant.durationDays = Number(body.durationDays !== undefined ? body.durationDays : variant.durationDays || 0);
+      variant.stockKeys = Array.from(new Set([...(variant.stockKeys || []), ...keys]));
+      return { product, variant };
+    }).catch((error) => ({ error: error.message }));
+    if (result.error) return sendError(res, 400, result.error);
+    return sendJson(res, 200, { product: result.product, variant: result.variant });
+  }
+
+  if (method === "DELETE" && pathname === "/api/admin/stock") {
+    const admin = await requireAdmin(req, res, store);
+    if (!admin) return;
+    const body = await readBody(req);
+    const result = await store.update((data) => {
+      const product = data.products.find((item) => item.id === body.productId);
+      if (!product) throw new Error("Product not found");
+      const variant = product.variants.find((item) => item.id === body.variantId);
+      if (!variant) throw new Error("Variant not found");
+      const current = Array.isArray(variant.stockKeys) ? variant.stockKeys : [];
+      if (body.clear) {
+        variant.stockKeys = [];
+      } else {
+        const remove = new Set(Array.isArray(body.keys) ? body.keys : []);
+        variant.stockKeys = current.filter((key) => !remove.has(key));
+      }
+      return { product, variant };
+    }).catch((error) => ({ error: error.message }));
+    if (result.error) return sendError(res, 400, result.error);
+    return sendJson(res, 200, { product: result.product, variant: result.variant });
   }
 
   const userUpdate = routeParams("/api/admin/users/:id", pathname);
