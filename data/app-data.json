@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "settings": {
+    "siteName": "GlowPanel Market",
+    "logoText": "GP",
+    "logoUrl": "",
+    "heroTitle": "Professional panel marketplace with smooth purchase flow",
+    "heroSubtitle": "Browse polished product sections, preview demos, choose variants, check converted prices, and submit orders with a clean account history.",
+    "introAnimation": true,
+    "backgroundImage": "/assets/marketplace-bg.png",
+    "supportWhatsApp": "https://wa.me/8801700000000",
+    "supportTelegram": "https://t.me/your_support",
+    "googleClientId": "",
+    "currencyRates": {
+      "BDT": 118,
+      "INR": 84
+    },
+    "overviewBadges": [
+      {
+        "id": "c38beb69-6d8e-4df9-85f1-7831cb224ef9",
+        "name": "FF Rewards",
+        "image": "/assets/marketplace-bg.png"
+      },
+      {
+        "id": "bc363b09-3de7-42f7-969e-66254b4da755",
+        "name": "Non Root",
+        "image": "/assets/marketplace-bg.png"
+      },
+      {
+        "id": "33a5b758-29a4-4763-bd04-a9fbd50a561a",
+        "name": "iPhone",
+        "image": "/assets/marketplace-bg.png"
+      },
+      {
+        "id": "6da9d659-7aeb-409e-9ea2-e984ae461e62",
+        "name": "PC Panel",
+        "image": "/assets/marketplace-bg.png"
+      }
+    ]
+  },
+  "paymentMethods": [
+    {
+      "id": "bkash",
+      "name": "bKash",
+      "currency": "BDT",
+      "rateKey": "BDT",
+      "account": "01700000000",
+      "instructions": "Send money manually, then paste transaction id.",
+      "enabled": true
+    },
+    {
+      "id": "nagad",
+      "name": "Nagad",
+      "currency": "BDT",
+      "rateKey": "BDT",
+      "account": "01700000000",
+      "instructions": "Send money manually, then paste transaction id.",
+      "enabled": true
+    },
+    {
+      "id": "rocket",
+      "name": "Rocket",
+      "currency": "BDT",
+      "rateKey": "BDT",
+      "account": "01700000000",
+      "instructions": "Send money manually, then paste transaction id.",
+      "enabled": true
+    },
+    {
+      "id": "binance",
+      "name": "Binance USDT",
+      "currency": "USD",
+      "rateKey": "USD",
+      "account": "binance-pay-id",
+      "instructions": "Pay the exact USD amount and submit payment reference.",
+      "enabled": true
+    },
+    {
+      "id": "india",
+      "name": "India UPI",
+      "currency": "INR",
+      "rateKey": "INR",
+      "account": "yourupi@bank",
+      "instructions": "Pay the INR converted amount and submit UPI reference.",
+      "enabled": true
+    }
+  ],
+  "sections": [
+    {
+      "id": "d5017059-2185-4077-aa7f-b162e752b79b",
+      "title": "Non Root Panel",
+      "subtitle": "Android friendly panel options with clean setup.",
+      "image": "/assets/marketplace-bg.png",
+      "enabled": true,
+      "sortOrder": 1
+    },
+    {
+      "id": "77fd86d9-4b18-49f8-a5a1-19eca4c1cac4",
+      "title": "Root & iPhone Panel",
+      "subtitle": "Advanced tools, video demos, and variant based pricing.",
+      "image": "/assets/marketplace-bg.png",
+      "enabled": true,
+      "sortOrder": 2
+    },
+    {
+      "id": "c455abe1-fb7c-4f94-b6b8-0e95ac23c3ac",
+      "title": "PC Panel",
+      "subtitle": "Desktop focused products with manual order approval.",
+      "image": "/assets/marketplace-bg.png",
+      "enabled": true,
+      "sortOrder": 3
+    }
+  ],
+  "products": [
+    {
+      "id": "20f4a729-0e4c-4362-817b-078552624f9c",
+      "sectionId": "d5017059-2185-4077-aa7f-b162e752b79b",
+      "name": "FF Reward Panel",
+      "panelName": "Non Root",
+      "shortDescription": "Stable package with account-safe setup and clear demo.",
+      "image": "/assets/marketplace-bg.png",
+      "demoVideoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "badge": "Popular",
+      "enabled": true,
+      "features": [
+        "Fast delivery",
+        "Manual approval",
+        "Video demo",
+        "Balance history"
+      ],
+      "variants": [
+        {
+          "id": "a6ecac11-bdc6-4461-b34a-b6ce33254254",
+          "name": "Basic",
+          "priceUsd": 5,
+          "description": "Starter setup"
+        },
+        {
+          "id": "aceb7937-85f2-4e93-b5d6-0fff5f350427",
+          "name": "Premium",
+          "priceUsd": 12,
+          "description": "Extra features"
+        },
+        {
+          "id": "adb6ce42-7831-4ac1-a6ea-7cc66252960c",
+          "name": "VIP",
+          "priceUsd": 25,
+          "description": "Priority support"
+        }
+      ]
+    },
+    {
+      "id": "4a0600c9-117b-4a26-a76f-909a28498599",
+      "sectionId": "d5017059-2185-4077-aa7f-b162e752b79b",
+      "name": "Campus Reward Pack",
+      "panelName": "Non Root",
+      "shortDescription": "Reward workflow with flexible quantity and manual checking.",
+      "image": "/assets/marketplace-bg.png",
+      "demoVideoUrl": "https://youtu.be/dQw4w9WgXcQ",
+      "badge": "New",
+      "enabled": true,
+      "features": [
+        "Quantity control",
+        "Admin variants",
+        "Payment proof",
+        "User history"
+      ],
+      "variants": [
+        {
+          "id": "f3c837ca-f07a-4ea8-9c65-7b74ecf7c5e7",
+          "name": "1 Day",
+          "priceUsd": 3,
+          "description": "Short access"
+        },
+        {
+          "id": "48a55893-8cea-4fe9-9bd1-6e17653be936",
+          "name": "7 Days",
+          "priceUsd": 15,
+          "description": "Weekly access"
+        }
+      ]
+    },
+    {
+      "id": "89db1583-f37b-413a-a828-d66427b8b765",
+      "sectionId": "77fd86d9-4b18-49f8-a5a1-19eca4c1cac4",
+      "name": "Root Pro Panel",
+      "panelName": "Root",
+      "shortDescription": "Advanced root panel with clean product details.",
+      "image": "/assets/marketplace-bg.png",
+      "demoVideoUrl": "",
+      "badge": "Advanced",
+      "enabled": true,
+      "features": [
+        "Root mode",
+        "Admin editable",
+        "Demo optional",
+        "Clear graphics"
+      ],
+      "variants": [
+        {
+          "id": "79974111-a658-438d-bffc-f25cc7ef01d2",
+          "name": "Standard",
+          "priceUsd": 9,
+          "description": "Root panel standard"
+        },
+        {
+          "id": "390a4862-8a1e-4efb-910d-7dda9f6fda07",
+          "name": "Lifetime",
+          "priceUsd": 39,
+          "description": "Long access"
+        }
+      ]
+    },
+    {
+      "id": "3f0ff575-a60a-46df-a126-90e48d035be7",
+      "sectionId": "c455abe1-fb7c-4f94-b6b8-0e95ac23c3ac",
+      "name": "PC Control Panel",
+      "panelName": "PC",
+      "shortDescription": "Desktop panel product with variant based checkout.",
+      "image": "/assets/marketplace-bg.png",
+      "demoVideoUrl": "",
+      "badge": "PC",
+      "enabled": true,
+      "features": [
+        "PC tools",
+        "USD base price",
+        "BDT/INR conversion",
+        "Help button"
+      ],
+      "variants": [
+        {
+          "id": "2c98c586-d290-45b9-8205-aa16b9c8f462",
+          "name": "Lite",
+          "priceUsd": 8,
+          "description": "Lite PC setup"
+        },
+        {
+          "id": "0781b9bb-347b-4ddf-a268-13afceafb3f3",
+          "name": "Full",
+          "priceUsd": 30,
+          "description": "Full PC package"
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "cfd2060d-a8ee-4b54-bc4c-666824e8b1ec",
+      "name": "Admin",
+      "email": "admin@example.com",
+      "role": "admin",
+      "passwordHash": "scrypt:8b83dae8b814a4f661411156b9c12c65:f0dbb5828589208370822d34ce5459a07b592790fc21f209cba452f9b8faf16a34e060619bc2edb7a2ef0ae9951c9dfed506edc1cf7506756bcc7faba792cc34",
+      "balanceUsd": 0,
+      "provider": "password",
+      "avatar": "",
+      "createdAt": "2026-06-02T07:34:03.502Z",
+      "history": []
+    }
+  ],
+  "orders": [],
+  "createdAt": "2026-06-02T07:34:03.502Z",
+  "updatedAt": "2026-06-02T08:17:15.684Z"
+}
