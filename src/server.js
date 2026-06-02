@@ -115,6 +115,17 @@ function sendError(res, status, message) {
   sendJson(res, status, { error: message });
 }
 
+function sendText(res, status, body, contentType = "text/plain; charset=utf-8") {
+  res.writeHead(status, {
+    "Content-Type": contentType,
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Content-Length": Buffer.byteLength(body)
+  });
+  res.end(body);
+}
+
 async function readBody(req) {
   const chunks = [];
   let size = 0;
@@ -268,6 +279,14 @@ async function verifyGoogleCredential(credential) {
 
 async function handleApi(req, res, store, pathname) {
   const method = req.method;
+
+  if (method === "GET" && pathname === "/api/health") {
+    return sendJson(res, 200, {
+      ok: true,
+      service: "panel-marketplace-backend",
+      time: new Date().toISOString()
+    });
+  }
 
   if (method === "GET" && pathname === "/api/bootstrap") {
     const data = await store.read();
@@ -607,9 +626,21 @@ async function serveStatic(req, res, pathname) {
     res.writeHead(200, { "Content-Type": mimeTypes[ext] || "application/octet-stream" });
     res.end(data);
   } catch {
-    const index = await fs.readFile(path.join(PUBLIC_DIR, "index.html"));
-    res.writeHead(200, { "Content-Type": mimeTypes[".html"] });
-    res.end(index);
+    try {
+      const index = await fs.readFile(path.join(PUBLIC_DIR, "index.html"));
+      res.writeHead(200, { "Content-Type": mimeTypes[".html"] });
+      res.end(index);
+    } catch {
+      if (pathname === "/" || pathname === "/health") {
+        return sendJson(res, 200, {
+          ok: true,
+          service: "panel-marketplace-backend",
+          message: "Backend API is running. Deploy the frontend separately and set FRONTEND_API_URL to this backend URL.",
+          health: "/api/health"
+        });
+      }
+      return sendText(res, 404, "Frontend files are not present in this backend service. Use the frontend Render service for the website UI.");
+    }
   }
 }
 
