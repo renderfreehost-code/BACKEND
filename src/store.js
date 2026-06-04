@@ -19,17 +19,17 @@ export function createSeedData() {
   return {
     version: 1,
     settings: {
-      siteName: "GlowPanel Market",
-      logoText: "GP",
+      siteName: "ACI STORE",
+      logoText: "ACI",
       logoUrl: "",
-      heroTitle: "Professional panel marketplace with smooth purchase flow",
-      heroSubtitle: "Browse polished product sections, preview demos, choose variants, check converted prices, and submit orders with a clean account history.",
+      heroTitle: "Premium panels with clean checkout",
+      heroSubtitle: "Preview demos, choose variant duration, select gateway, and submit transaction proof step by step.",
       introAnimation: true,
       backgroundImage: "/assets/marketplace-bg.png",
       heroSlides: [
-        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Premium panels", subtitle: "Smooth demo and purchase flow" },
-        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Fast support", subtitle: "Admin controlled products and variants" },
-        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Clear checkout", subtitle: "Manual payment verification with history" }
+        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Premium panels with clean checkout", subtitle: "Variant, quantity, gateway, and transaction proof in one flow" },
+        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Fast support and delivery", subtitle: "Admin controlled products, variants, and key stock" },
+        { id: crypto.randomUUID(), image: "/assets/marketplace-bg.png", title: "Secure manual payment", subtitle: "bKash, Nagad, Rocket, Binance, and India UPI ready" }
       ],
       heroIntervalSeconds: 6,
       supportWhatsApp: "https://wa.me/8801700000000",
@@ -123,18 +123,18 @@ export function createSeedData() {
       {
         id: productA,
         sectionId: sectionA,
-        name: "FF Reward Panel",
+        name: "FF Guild Glory",
         panelName: "Non Root",
-        shortDescription: "Stable package with account-safe setup and clear demo.",
+        shortDescription: "FreeFire guild level up panel with clear demo and manual verification.",
         image: "/assets/marketplace-bg.png",
         demoVideoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
         badge: "Popular",
         enabled: true,
         features: ["Fast delivery", "Manual approval", "Video demo", "Balance history"],
         variants: [
-          { id: crypto.randomUUID(), name: "1 Day Basic", priceUsd: 5, durationDays: 1, description: "Starter setup", stockKeys: [] },
-          { id: crypto.randomUUID(), name: "7 Days Premium", priceUsd: 12, durationDays: 7, description: "Extra features", stockKeys: [] },
-          { id: crypto.randomUUID(), name: "30 Days VIP", priceUsd: 25, durationDays: 30, description: "Priority support", stockKeys: [] }
+          { id: crypto.randomUUID(), name: "1 BASIC", priceUsd: 1.3, durationDays: 1, description: "Starter setup", stockKeys: [] },
+          { id: crypto.randomUUID(), name: "7 DAYS", priceUsd: 7, durationDays: 7, description: "Weekly access", stockKeys: [] },
+          { id: crypto.randomUUID(), name: "30 DAYS VIP", priceUsd: 25, durationDays: 30, description: "Priority support", stockKeys: [] }
         ]
       },
       {

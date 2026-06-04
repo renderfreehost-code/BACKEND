@@ -1,11 +1,11 @@
 {
   "version": 1,
   "settings": {
-    "siteName": "GlowPanel Market",
-    "logoText": "GP",
+    "siteName": "ACI STORE",
+    "logoText": "ACI",
     "logoUrl": "",
-    "heroTitle": "Professional panel marketplace with smooth purchase flow",
-    "heroSubtitle": "Browse polished product sections, preview demos, choose variants, check converted prices, and submit orders with a clean account history.",
+    "heroTitle": "Premium panels with clean checkout",
+    "heroSubtitle": "Preview demos, choose variant duration, select gateway, and submit transaction proof step by step.",
     "introAnimation": true,
     "backgroundImage": "/assets/marketplace-bg.png",
     "supportWhatsApp": "https://wa.me/8801700000000",
@@ -42,20 +42,20 @@
       {
         "id": "ed64a4ee-167f-4ad1-8e5d-75a2ef3a5e30",
         "image": "/assets/marketplace-bg.png",
-        "title": "Professional panel marketplace with smooth purchase flow",
-        "subtitle": "Browse polished product sections, preview demos, choose variants, check converted prices, and submit orders with a clean account history."
+        "title": "Premium panels with clean checkout",
+        "subtitle": "Variant, quantity, gateway, and transaction proof in one flow"
       },
       {
         "id": "408ad75a-e5ac-4d3e-ac23-f633fb3e7d6d",
         "image": "/assets/marketplace-bg.png",
-        "title": "Fast support",
-        "subtitle": "Admin controlled products, variants, and stock"
+        "title": "Fast support and delivery",
+        "subtitle": "Admin controlled products, variants, and key stock"
       },
       {
         "id": "9940a4e2-7de3-4f85-8826-9e89ed712677",
         "image": "/assets/marketplace-bg.png",
-        "title": "Clear checkout",
-        "subtitle": "Manual payment verification with clean history"
+        "title": "Secure manual payment",
+        "subtitle": "bKash, Nagad, Rocket, Binance, and India UPI ready"
       }
     ]
   },
@@ -136,9 +136,9 @@
     {
       "id": "20f4a729-0e4c-4362-817b-078552624f9c",
       "sectionId": "d5017059-2185-4077-aa7f-b162e752b79b",
-      "name": "FF Reward Panel",
+      "name": "FF Guild Glory",
       "panelName": "Non Root",
-      "shortDescription": "Stable package with account-safe setup and clear demo.",
+      "shortDescription": "FreeFire guild level up panel with clear demo and manual verification.",
       "image": "/assets/marketplace-bg.png",
       "demoVideoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
       "badge": "Popular",
@@ -152,23 +152,23 @@
       "variants": [
         {
           "id": "a6ecac11-bdc6-4461-b34a-b6ce33254254",
-          "name": "Basic",
-          "priceUsd": 5,
+          "name": "1 BASIC",
+          "priceUsd": 1.3,
           "description": "Starter setup",
           "durationDays": 1,
           "stockKeys": []
         },
         {
           "id": "aceb7937-85f2-4e93-b5d6-0fff5f350427",
-          "name": "Premium",
-          "priceUsd": 12,
+          "name": "7 DAYS",
+          "priceUsd": 7,
           "description": "Extra features",
           "durationDays": 7,
           "stockKeys": []
         },
         {
           "id": "adb6ce42-7831-4ac1-a6ea-7cc66252960c",
-          "name": "VIP",
+          "name": "30 DAYS VIP",
           "priceUsd": 25,
           "description": "Priority support",
           "durationDays": 30,
@@ -294,9 +294,33 @@
       "avatar": "",
       "createdAt": "2026-06-02T07:34:03.502Z",
       "history": []
+    },
+    {
+      "id": "28087060-67f2-4231-9089-062ffad274ca",
+      "name": "ibrahim",
+      "email": "ibrahimprodhan393@gmail.com",
+      "role": "user",
+      "passwordHash": "scrypt:0a0f26603e0d6641fc6baad59608fde1:0a75c93dd8380210dc67db35ce30920a6aa1177aee8f2657fbf1160126f951ea45b659a61bd60c1bd05a3c809316452e47666b0c04b592779ea4d8adf0ea788e",
+      "balanceUsd": 0,
+      "provider": "password",
+      "avatar": "",
+      "createdAt": "2026-06-03T14:01:11.340Z",
+      "history": []
+    },
+    {
+      "id": "fb716ba7-ac16-4cae-9eef-4aa1ac98bd2e",
+      "name": "Flow Test",
+      "email": "flowtest1780557519972@gmail.com",
+      "role": "user",
+      "passwordHash": "scrypt:e5b63f2ce61f1a8a16f3502ce1818264:a6bf1533850599b02ad398e640d81fe0d539f77e988353674520228d5716d5ed68f1082b4e8b084fb96b4708d0ca9e0c2abaae6114f35d583b3e77eaca1bcc40",
+      "balanceUsd": 0,
+      "provider": "password",
+      "avatar": "",
+      "createdAt": "2026-06-04T07:18:44.652Z",
+      "history": []
     }
   ],
   "orders": [],
   "createdAt": "2026-06-02T07:34:03.502Z",
-  "updatedAt": "2026-06-02T15:22:59.599Z"
+  "updatedAt": "2026-06-04T07:18:44.653Z"
 }
