@@ -14,6 +14,7 @@ const PUBLIC_DIR = path.resolve(process.env.FRONTEND_DIR || path.join(ROOT, ".."
 const PORT = Number(process.env.PORT || 3000);
 const TOKEN_SECRET = process.env.TOKEN_SECRET || "dev-change-this-panel-marketplace-secret";
 const DEFAULT_ADMIN_PASSWORD = "Admin@12345";
+const RESET_CODE_TTL_MS = 10 * 60 * 1000;
 
 function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
   const derived = crypto.scryptSync(password, salt, 64).toString("hex");
@@ -183,6 +184,72 @@ async function verifyGoogleCredential(credential) {
   return { email: info.email, name: info.name || info.email, avatar: info.picture || "" };
 }
 
+function base64Url(input) {
+  return Buffer.from(input)
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function gmailResetConfig(settings = {}) {
+  return {
+    clientId: process.env.GMAIL_CLIENT_ID || settings.googleClientId || "",
+    clientSecret: process.env.GMAIL_CLIENT_SECRET || "",
+    refreshToken: process.env.GMAIL_REFRESH_TOKEN || "",
+    from: process.env.GMAIL_FROM || process.env.GMAIL_USER || ""
+  };
+}
+
+async function sendResetCodeEmail({ email, code, settings }) {
+  const siteName = settings?.siteName || "ACI STORE";
+  const config = gmailResetConfig(settings);
+  if (!config.clientId || !config.clientSecret || !config.refreshToken || !config.from) {
+    throw new Error("Gmail reset email is not configured. Set GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN and GMAIL_FROM.");
+  }
+
+  const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      refresh_token: config.refreshToken,
+      grant_type: "refresh_token"
+    })
+  });
+  const tokenPayload = await tokenResponse.json().catch(() => ({}));
+  if (!tokenResponse.ok || !tokenPayload.access_token) {
+    throw new Error(tokenPayload.error_description || "Gmail access token request failed.");
+  }
+
+  const message = [
+    `To: ${email}`,
+    `From: ${config.from}`,
+    `Subject: ${siteName} password reset code`,
+    "MIME-Version: 1.0",
+    "Content-Type: text/plain; charset=UTF-8",
+    "",
+    `Your ${siteName} reset code is: ${code}`,
+    "",
+    "This code will expire in 10 minutes.",
+    "If you did not request this, ignore this email."
+  ].join("\r\n");
+
+  const sendResponse = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${tokenPayload.access_token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ raw: base64Url(message) })
+  });
+  const sendPayload = await sendResponse.json().catch(() => ({}));
+  if (!sendResponse.ok) {
+    throw new Error(sendPayload.error?.message || "Gmail reset email failed to send.");
+  }
+}
+
 function asyncRoute(handler) {
   return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
 }
@@ -219,7 +286,7 @@ async function buildApp() {
 
   app.disable("x-powered-by");
   app.use(cors());
-  app.use(express.json({ limit: "10mb" }));
+  app.use(express.json({ limit: "25mb" }));
 
   app.get("/api/health", (req, res) => {
     res.json({ ok: true, service: "panel-marketplace-express-api", time: new Date().toISOString() });
@@ -267,6 +334,59 @@ async function buildApp() {
       return res.status(401).json({ error: "Invalid email or password" });
     }
     res.json({ token: issueToken(user), user: withoutSecretUser(user) });
+  }));
+
+  app.post("/api/auth/forgot-password", asyncRoute(async (req, res) => {
+    const email = String(req.body.email || "").trim().toLowerCase();
+    const phase = String(req.body.phase || (req.body.code ? "reset" : "request")).toLowerCase();
+    const newPassword = String(req.body.password || req.body.newPassword || "");
+    if (!isGmailAddress(email)) return res.status(400).json({ error: "Use your registered Gmail address" });
+
+    if (phase === "request") {
+      const data = await store.read();
+      const user = data.users.find((item) => item.email.toLowerCase() === email);
+      if (!user) return res.status(404).json({ error: "Account not found" });
+      const code = String(crypto.randomInt(100000, 1000000));
+      try {
+        await sendResetCodeEmail({ email, code, settings: data.settings });
+      } catch (error) {
+        return res.status(503).json({ error: error.message });
+      }
+      await store.update((nextData) => {
+        const now = Date.now();
+        nextData.passwordResetCodes = (nextData.passwordResetCodes || [])
+          .filter((item) => item.email !== email && new Date(item.expiresAt).getTime() > now);
+        nextData.passwordResetCodes.push({
+          email,
+          codeHash: hashPassword(code),
+          createdAt: new Date().toISOString(),
+          expiresAt: new Date(now + RESET_CODE_TTL_MS).toISOString()
+        });
+        return true;
+      });
+      return res.json({ ok: true, message: "Reset code sent to your Gmail. Code expires in 10 minutes." });
+    }
+
+    const code = String(req.body.code || "").trim();
+    if (!/^\d{6}$/.test(code)) return res.status(400).json({ error: "Enter the 6 digit reset code from Gmail" });
+    if (newPassword.length < 6) return res.status(400).json({ error: "Create a 6+ character site password" });
+    const result = await store.update((data) => {
+      const user = data.users.find((item) => item.email.toLowerCase() === email);
+      if (!user) throw new Error("Account not found");
+      const now = Date.now();
+      const records = (data.passwordResetCodes || [])
+        .filter((item) => item.email === email && new Date(item.expiresAt).getTime() > now)
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const matched = records.find((item) => verifyPassword(code, item.codeHash));
+      if (!matched) throw new Error("Invalid or expired reset code");
+      user.passwordHash = hashPassword(newPassword);
+      user.provider = user.provider?.includes("password") ? user.provider : `${user.provider || "user"},password`;
+      user.history = [...(user.history || []), { type: "password-reset", createdAt: new Date().toISOString() }];
+      data.passwordResetCodes = (data.passwordResetCodes || []).filter((item) => item.email !== email);
+      return withoutSecretUser(user);
+    }).catch((error) => ({ error: error.message }));
+    if (result.error) return res.status(400).json({ error: result.error });
+    res.json({ ok: true, user: result });
   }));
 
   app.post("/api/auth/google", asyncRoute(async (req, res) => {
@@ -385,6 +505,8 @@ async function buildApp() {
         currency: String(method.currency || "USD").trim().toUpperCase(),
         rateKey: String(method.rateKey || method.currency || "USD").trim().toUpperCase(),
         account: String(method.account || "").trim(),
+        logoUrl: String(method.logoUrl || "").trim(),
+        group: String(method.group || "").trim().toLowerCase() === "binance" ? "binance" : "main",
         instructions: String(method.instructions || "").trim(),
         enabled: Boolean(method.enabled)
       })).filter((method) => method.id && method.name);

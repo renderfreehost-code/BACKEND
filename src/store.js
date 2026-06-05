@@ -53,6 +53,8 @@ export function createSeedData() {
         currency: "BDT",
         rateKey: "BDT",
         account: "01700000000",
+        logoUrl: "",
+        group: "main",
         instructions: "Send money manually, then paste transaction id.",
         enabled: true
       },
@@ -62,6 +64,8 @@ export function createSeedData() {
         currency: "BDT",
         rateKey: "BDT",
         account: "01700000000",
+        logoUrl: "",
+        group: "main",
         instructions: "Send money manually, then paste transaction id.",
         enabled: true
       },
@@ -71,16 +75,53 @@ export function createSeedData() {
         currency: "BDT",
         rateKey: "BDT",
         account: "01700000000",
+        logoUrl: "",
+        group: "main",
         instructions: "Send money manually, then paste transaction id.",
         enabled: true
       },
       {
-        id: "binance",
-        name: "Binance USDT",
+        id: "binance-pay-id",
+        name: "Binance Pay ID",
         currency: "USD",
         rateKey: "USD",
-        account: "binance-pay-id",
-        instructions: "Pay the exact USD amount and submit payment reference.",
+        account: "123456789",
+        logoUrl: "",
+        group: "binance",
+        instructions: "Send the exact USD amount using Binance Pay ID. Paste the Binance order or reference ID after payment.",
+        enabled: true
+      },
+      {
+        id: "usdt-trc20",
+        name: "USDT TRC20",
+        currency: "USD",
+        rateKey: "USD",
+        account: "TRC20-USDT-WALLET-ADDRESS",
+        logoUrl: "",
+        group: "binance",
+        instructions: "Send USDT on the TRC20 network only. Paste the transaction hash after payment.",
+        enabled: true
+      },
+      {
+        id: "usdt-bep20",
+        name: "USDT BEP20 (BSC)",
+        currency: "USD",
+        rateKey: "USD",
+        account: "BEP20-USDT-WALLET-ADDRESS",
+        logoUrl: "",
+        group: "binance",
+        instructions: "Send USDT on BNB Smart Chain (BEP20/BSC) only. Paste the transaction hash after payment.",
+        enabled: true
+      },
+      {
+        id: "bitcoin-btc",
+        name: "Bitcoin BTC",
+        currency: "USD",
+        rateKey: "USD",
+        account: "BTC-WALLET-ADDRESS",
+        logoUrl: "",
+        group: "binance",
+        instructions: "Send BTC equivalent to the USD amount. Paste the Bitcoin transaction hash after payment.",
         enabled: true
       },
       {
@@ -89,6 +130,8 @@ export function createSeedData() {
         currency: "INR",
         rateKey: "INR",
         account: "yourupi@bank",
+        logoUrl: "",
+        group: "main",
         instructions: "Pay the INR converted amount and submit UPI reference.",
         enabled: true
       }
@@ -201,6 +244,7 @@ export function createSeedData() {
       }
     ],
     orders: [],
+    passwordResetCodes: [],
     createdAt: now,
     updatedAt: now
   };
