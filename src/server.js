@@ -480,7 +480,7 @@ async function buildApp() {
     res.json({
       ...data,
       users: data.users.map(withoutSecretUser),
-      defaultCredentials: { adminEmail: "admin@example.com", adminPassword: DEFAULT_ADMIN_PASSWORD }
+      defaultCredentials: { adminEmail: admin.email, adminPassword: DEFAULT_ADMIN_PASSWORD }
     });
   }));
 
@@ -711,6 +711,24 @@ async function buildApp() {
       record.passwordHash = hashPassword(newPassword);
     });
     res.json({ ok: true });
+  }));
+
+  app.put("/api/admin/account", asyncRoute(async (req, res) => {
+    const admin = await requireAdmin(req, res, store);
+    if (!admin) return;
+    const email = String(req.body.email || "").trim().toLowerCase();
+    if (!isGmailAddress(email)) return res.status(400).json({ error: "Enter a valid Gmail address" });
+    const user = await store.update((data) => {
+      const duplicate = data.users.find((item) => item.id !== admin.id && item.email.toLowerCase() === email);
+      if (duplicate) throw new Error("This email is already used by another account");
+      const record = data.users.find((item) => item.id === admin.id);
+      if (!record) throw new Error("Admin account not found");
+      record.email = email;
+      record.history = [...(record.history || []), { id: crypto.randomUUID(), type: "admin-email-change", createdAt: new Date().toISOString() }];
+      return record;
+    }).catch((error) => ({ error: error.message }));
+    if (user.error) return res.status(400).json({ error: user.error });
+    res.json({ user: withoutSecretUser(user) });
   }));
 
   app.use(express.static(PUBLIC_DIR));

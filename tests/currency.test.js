@@ -24,3 +24,16 @@ test("convertUsd converts Bangladesh and India methods from USD", () => {
     amount: 840
   });
 });
+
+test("convertUsd keeps crypto payment amounts precise", () => {
+  assert.deepEqual(convertUsd(1.35, { currency: "USDT", rateKey: "USDT" }, { USDT: 1 }), {
+    currency: "USDT",
+    exchangeRate: 1,
+    amount: 1.35
+  });
+  assert.deepEqual(convertUsd(100, { currency: "BTC", rateKey: "BTC" }, { BTC: 0.0000091 }), {
+    currency: "BTC",
+    exchangeRate: 0.0000091,
+    amount: 0.00091
+  });
+});
