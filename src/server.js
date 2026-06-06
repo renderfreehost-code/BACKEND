@@ -731,12 +731,29 @@ async function buildApp() {
     res.json({ user: withoutSecretUser(user) });
   }));
 
-  app.use(express.static(PUBLIC_DIR));
+  async function serveFrontend(req, res) {
+    if (req.path.startsWith("/admin")) {
+      res.set("Cache-Control", "no-store");
+    }
+    const index = await fs.readFile(path.join(PUBLIC_DIR, "index.html"), "utf8");
+    res.type("html").send(index);
+  }
+
+  app.get(/^\/admin(?:\/.*)?$/, asyncRoute(serveFrontend));
+
+  app.use(express.static(PUBLIC_DIR, {
+    setHeaders(res, filePath) {
+      const name = path.basename(filePath);
+      if (name === "sw.js" || name === "manifest.webmanifest") {
+        res.setHeader("Cache-Control", "no-cache");
+      }
+    }
+  }));
+
   app.use(async (req, res) => {
     if (req.path.startsWith("/api/")) return res.status(404).json({ error: "API route not found" });
     try {
-      const index = await fs.readFile(path.join(PUBLIC_DIR, "index.html"), "utf8");
-      res.type("html").send(index);
+      await serveFrontend(req, res);
     } catch {
       res.json({
         ok: true,
